@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%=htmlWebpackPlugin.options.title%>
+    </title>
+</head>
+
+<body>
+    <div class="wrap" v-cloak>
+        <div class="container">
+            <div class="con-l">
+                <div class="bookitem">
+                    <h3>{{bookdata.title}}</h3>
+                    <div class="cover">
+                        <img :src="bookdata.images.medium" :alt="bookdata.images.alt">
+                    </div>
+                    <table class="basemsg">
+                        <tbody>
+                            <tr>
+                                <td class="info-l">作者:</td>
+                                <td>{{bookdata.author}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">出版社:</td>
+                                <td>{{bookdata.publisher}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">译者:</td>
+                                <td>{{bookdata.translator}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">出版年:</td>
+                                <td>{{bookdata.pubdate}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">页数:</td>
+                                <td>{{bookdata.pages}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">定价:</td>
+                                <td>{{bookdata.price}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">装帧:</td>
+                                <td>{{bookdata.binding}}</td>
+                            </tr>
+                            <tr>
+                                <td class="info-l">ISBN:</td>
+                                <td>{{bookdata.isbn13}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="rating">
+                        <p>豆瓣评分</p>
+                        <span class="average">{{bookdata.rating.average}}</span>
+                        <div class="rating_right">
+                            <div class="star">{{bookdata.rating.average | starFilter}}</div>
+                            <div class="rating_num">{{bookdata.rating.numRaters}}人评价</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

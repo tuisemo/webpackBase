@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%=htmlWebpackPlugin.options.title%>
+    </title>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="conten">
+            省份：
+            <select name="curProvince" id="curProvince" v-model="curProvince">
+                <option v-for="(item,index) in provinces" :value="item.name">{{item.name}}</option>
+            </select>
+        </div>
+        <div class="conten">
+            城市：
+            <select name="curCity" id="curCity" v-model="curCity">
+                <option v-for="(item,index) in citys" :value="item">{{item}}</option>
+            </select>
+        </div>
+        <div class="conten">
+            <p>你现在选择的是{{curProvince}},{{curCity}}</p>
+        </div>
+    </div>
+</body>
+
+</html>
