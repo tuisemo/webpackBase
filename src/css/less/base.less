@@ -1,7 +1,9 @@
 /*Less*/
+
 [v-cloak] {
-  display: none;
+    display: none;
 }
+
 html,
 body {
     width: 100%;
@@ -39,12 +41,19 @@ a {
     margin: 0 auto;
     width: 1000px;
     .bookitem {
+        position: relative;
         margin: 10px 0;
         padding: 10px;
         border: 1px solid #eeeeee;
         border-radius: 5px;
         &:after {
             .clearfix
+        }
+        .checkThis {
+            position: relative;
+            float: left;
+            margin-right: 10px;
+            margin-top: 50px;
         }
     }
     .con-l {
@@ -66,6 +75,7 @@ a {
 .basemsg {
     position: relative;
     float: left;
+    width: 400px;
     padding-left: 15px;
     font-size: 12px;
     .info-l {
@@ -75,14 +85,16 @@ a {
 
 .rating {
     position: relative;
-    float: right;
+    float: left;
     width: 120px;
     margin-right: 20px;
     min-height: 150px;
     font-size: 12px;
     color: #666666;
     border-left: .5px solid #eeeeee;
+    border-right: .5px solid #eeeeee;
     padding-left: 15px;
+    padding-right: 15px;
     p {
         margin: 0 0 5px 0;
         line-height: 1.2;
@@ -104,6 +116,66 @@ a {
         line-height: 1.8;
         font-size: 28px;
         color: #333333;
+    }
+}
+
+.item_count {
+    position: relative;
+    float: left;
+    margin-right: 30px;
+    margin-left: 15px;
+}
+
+.buy_num {
+    position: relative;
+    margin: 0 auto;
+    &:after {
+        .clearfix
+    }
+    .num_add,
+    .num_minus {
+        position: relative;
+        float: left;
+        display: block;
+        width: 18px;
+        height: 18px;
+        color: #666;
+        text-align: center;
+        border: 1px solid #eee;
+    }
+    .num_input {
+        position: relative;
+        float: left;
+        width: 30px;
+        height: 16px;
+        font-size: 14px;
+        text-align: center;
+        color: #666;
+        border: 1px solid #eee;
+        border-right: 0;
+        border-left: 0;
+    }
+}
+
+.total {
+    position: relative;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.shoppingBar {
+    position: relative;
+    line-height: 1.4;
+    label{
+    	font-size: 12px;
+    }
+    #ischeckAll {
+        position: relative;
+        float: left;
+        line-height: 1.4;
     }
 }
 

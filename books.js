@@ -7,18 +7,15 @@ import './src/css/less/base.less';
 var app = new Vue({
     el: '.wrap',
     data: {
-        bookdata: {}
+        booksdata: [],
+        isCheckAll: false
     },
     created: function() {
         let self = this;
         this.$nextTick(function() {
-            axios.get('/api/bookid', {
-                    params: {
-                        id: 1003078
-                    }
-                })
+            axios.get('/api/books')
                 .then(function(res) {
-                    self.bookdata = res.data;
+                    self.booksdata = res.data;
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -28,41 +25,58 @@ var app = new Vue({
     mounted: function() {
         let self = this;
     },
-    computed: {},
+    computed: {
+        totalprice: function() {
+            let total = 0;
+            this.booksdata.forEach(function(book) {
+            })
+        }
+    },
     methods: {
-        loadBook: function(id) {
+        changeNum: function(self, opt) {
+            if (opt == -1) {
+                if (self.buynum == 1) {
+                    return;
+                } else
+                    self.buynum--;
+            } else
+                self.buynum++;
+        },
+        selectBook: function(book) {
+            if (book.select == void 0) { //使用void 0 代替undefined
+                this.$set(book, 'select', true)
+            } else
+                book.select = !book.select;
+        },
+        selectAll: function() {
             let self = this;
-            axios.get('/api/bookid', {
-                    params: {
-                        id: id
-                    }
-                })
-                .then(function(res) {
-                    self.bookdata = res.data;
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-
+            this.isCheckAll = !this.isCheckAll;
+            this.booksdata.forEach(function(el, index, arr) {
+                self.selectBook(el);
+                console.log(el.select);
+            })
         }
     },
     filters: {
         starFilter: function(val) {
             let star = '';
-            if (val > 9.5) {
+            if (val > 9) {
                 star = '★★★★★';
-            } else if (val > 9) {
-                star = '★★★★☆';
             } else if (val > 8) {
-                star = '★★★☆☆';
+                star = '★★★★☆';
             } else if (val > 7) {
-                star = '★★☆☆☆';
+                star = '★★★☆☆';
             } else if (val > 6) {
+                star = '★★☆☆☆';
+            } else if (val > 5) {
                 star = '★☆☆☆☆';
             } else {
                 star = '☆☆☆☆☆';
             }
             return star;
+        },
+        priceFilter: function(val) {
+            return '￥ ' + parseFloat(val.toFixed(2)) + ' 元';
         }
     }
 })
