@@ -10,7 +10,17 @@ body {
     height: 100%;
     font-family: Helvetica, Arial, sans-serif;
 }
-
+*{
+	box-sizing: border-box;
+}
+.fl{
+    position: relative;
+    float: left;	
+}
+.fr{
+    position: relative;
+    float: right;	
+}
 .clearfix() {
     clear: both;
     content: ' ';
@@ -147,7 +157,7 @@ a {
         position: relative;
         float: left;
         width: 30px;
-        height: 16px;
+        height: 18px;
         font-size: 14px;
         text-align: center;
         color: #666;
@@ -165,7 +175,10 @@ a {
     font-size: 14px;
     font-weight: bold;
 }
-
+.shopping-r{
+	position: relative;
+	float: right;
+}
 .shoppingBar {
     position: relative;
     line-height: 1.4;
@@ -176,6 +189,20 @@ a {
         position: relative;
         float: left;
         line-height: 1.4;
+    }
+    .shoppingBtn{
+    	position: relative;
+    	float: left;
+    	margin: -10px;
+    	margin-left: 0;
+    	width: 100px;
+    	height: 44px;
+    	background-color: #e54346;
+    	line-height: 44px;
+    	color:#fff;
+    	font-size: 20px;
+    	text-align: center;
+    	cursor: pointer;
     }
 }
 

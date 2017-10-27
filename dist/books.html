@@ -77,7 +77,12 @@
             </div>
             <div class="shoppingBar bookitem">
                 <input id="isCheckAll" type="checkbox" @click="selectAll()">
-                <label for="isCheckAll" v-text="isCheckAll ? '全选':'取消全选'"></label>
+                <label for="isCheckAll" v-text="isCheckAll ? '取消全选':'全选'"></label>
+                <div class="shopping-r">
+                    <label class="fl total">已选{{ selectNum }}件商品</label>
+                    <label class="fl total">共计:{{totalprice | priceFilter}}</label>
+                    <div class="shoppingBtn">结算</div>
+                </div>
             </div>
         </div>
     </div>

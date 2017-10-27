@@ -28,9 +28,23 @@ var app = new Vue({
     computed: {
         totalprice: function() {
             let total = 0;
-            this.booksdata.forEach(function(book) {
+            this.booksdata.forEach(function(el, index, arr) {
+                if (el.select) {
+                    total = total + el.buyprice * el.buynum;
+                }
             })
-        }
+            return total;
+        },
+        selectNum: function() {
+            let selectNum = 0;
+            this.booksdata.forEach(function(el, index, arr) {
+                if (el.select) {
+                    selectNum = selectNum + el.buynum;
+                }
+            });
+            return selectNum;
+        },
+
     },
     methods: {
         changeNum: function(self, opt) {
@@ -42,17 +56,24 @@ var app = new Vue({
             } else
                 self.buynum++;
         },
-        selectBook: function(book) {
+        selectBook: function(book, value) {
             if (book.select == void 0) { //使用void 0 代替undefined
-                this.$set(book, 'select', true)
-            } else
-                book.select = !book.select;
+                if (value != void 0) {
+                    this.$set(book, 'select', value)
+                } else
+                    this.$set(book, 'select', true)
+            } else {
+                if (value != void 0) {
+                    book.select = value;
+                } else
+                    book.select = !book.select;
+            }
         },
         selectAll: function() {
             let self = this;
             this.isCheckAll = !this.isCheckAll;
             this.booksdata.forEach(function(el, index, arr) {
-                self.selectBook(el);
+                self.selectBook(el, self.isCheckAll);
                 console.log(el.select);
             })
         }
