@@ -10,17 +10,21 @@ body {
     height: 100%;
     font-family: Helvetica, Arial, sans-serif;
 }
-*{
-	box-sizing: border-box;
+
+* {
+    box-sizing: border-box;
 }
-.fl{
+
+.fl {
     position: relative;
-    float: left;	
+    float: left;
 }
-.fr{
+
+.fr {
     position: relative;
-    float: right;	
+    float: right;
 }
+
 .clearfix() {
     clear: both;
     content: ' ';
@@ -175,39 +179,86 @@ a {
     font-size: 14px;
     font-weight: bold;
 }
-.shopping-r{
-	position: relative;
-	float: right;
+
+.shopping-r {
+    position: relative;
+    float: right;
 }
+
 .shoppingBar {
     position: relative;
     line-height: 1.4;
-    label{
-    	font-size: 12px;
+    label {
+        font-size: 12px;
     }
     #ischeckAll {
         position: relative;
         float: left;
         line-height: 1.4;
     }
-    .shoppingBtn{
-    	position: relative;
-    	float: left;
-    	margin: -10px;
-    	margin-left: 0;
-    	width: 100px;
-    	height: 44px;
-    	background-color: #e54346;
-    	line-height: 44px;
-    	color:#fff;
-    	font-size: 20px;
-    	text-align: center;
-    	cursor: pointer;
+    .shoppingBtn {
+        position: relative;
+        float: left;
+        margin: -10px;
+        margin-left: 0;
+        width: 100px;
+        height: 44px;
+        background-color: #e54346;
+        line-height: 44px;
+        color: #fff;
+        font-size: 20px;
+        text-align: center;
+        cursor: pointer;
     }
 }
 
 table {
     td {
         line-height: 1.2;
+    }
+}
+
+
+
+
+/*搜索组件*/
+
+.search-form {
+    position: relative;
+    margin: 0 auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    &:after {
+        .clearfix
+    }
+    input {
+        position: relative;
+        float: left;
+        width: 450px;
+        line-height: 1.4;
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: .5px solid #ccc;
+        background-color: #fff;
+        &:focus {
+            outline: none;
+        }
+        &.input-group {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+    .btn-add {
+        position: relative;
+        float: left;
+        cursor: pointer;
+        height: 32px;
+        padding: 6px 12px;
+        border-radius: 5px;
+        border: .5px solid #ccc;
+        border-left: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 }

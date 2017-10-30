@@ -8,6 +8,7 @@ module.exports = {
     entry: {
         'index': path.resolve(__dirname, './main.js'),
         'books': path.resolve(__dirname, './books.js'),
+        'home': path.resolve(__dirname, './home.js'),
     },
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -51,6 +52,12 @@ module.exports = {
             chunks: ['books'],
             template: './src/books.ejs',
             filename: './books.html',
+        }),
+        new HtmlWebpackPlugin({
+            title: 'webpack',
+            chunks: ['home'],
+            template: './src/template.ejs',
+            filename: './home.html',
         })
     ]
 }
