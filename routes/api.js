@@ -15,8 +15,15 @@ router.get('/api/books', function(req, res, next) {
 });
 
 router.get('/api/search', function(req, res) {
+    // let url = 'https://api.douban.com/v2/book/search';
+    let url = '/api/searchs';
+    // console.log(req);
+    req.pipe(request(url)).pipe(res);
+});
+
+router.get('/api/searchs', function(req, res) {
     let url = 'https://api.douban.com/v2/book/search';
-    console.log(req.query.q);
+    console.log(req);
     req.pipe(request(url)).pipe(res);
 });
 

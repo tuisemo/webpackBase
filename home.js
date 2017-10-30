@@ -1,5 +1,6 @@
 /*home.js*/
 const Vue = require('./src/js/vue.js');
+const $ = require('./src/js/jquery.min.js');
 const axios = require('axios');
 import './src/css/normalize.css';
 import './src/css/less/base.less';
@@ -10,7 +11,7 @@ Vue.component('search', {
     template: `
         <form class="search-form">
             <input class="input-group" type="text" name="keyword" v-model:value="keyword" placeholder="作品 / 电子书 / 专栏连载 / 作者 / 出版社" autocomplete="off">
-            <div class="btn-add" @click="searchThis">搜索</div>
+            <div class="btn-add" @click="searchAjax">搜索</div>
         </form>
     `,
     data: function() {
@@ -24,8 +25,11 @@ Vue.component('search', {
             axios.get('/api/search', {
                     params: {
                         q: self.keyword,
-                        tag: self.keyword,
+
                     }
+                    // tag: '',
+                    // start: 0,
+                    // count: 2
                 })
                 .then(function(res) {
                     console.log(res);
@@ -33,6 +37,22 @@ Vue.component('search', {
                 .catch(function(error) {
                     console.log(error);
                 });
+        },
+        searchAjax:function() {            
+            let self=this;
+            $.ajax({
+                url: '/api/searchs',
+                type: 'GET',
+                dataType:'json',
+                data: {q: self.keyword},
+            })
+            .done(function() {
+                console.log("success");
+            })
+            .fail(function() {
+                console.log("error");
+            });
+            
         }
     }
 });
