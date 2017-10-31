@@ -35,12 +35,6 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin('dist'),
-        new ExtractTextPlugin({
-            filename: (getPath) => {
-                return getPath('css/[name].css').replace('css/js', 'css');
-            },
-            allChunks: true
-        }),
         new HtmlWebpackPlugin({
             title: 'webpack',
             chunks: ['index'],
@@ -58,6 +52,12 @@ module.exports = {
             chunks: ['home'],
             template: './src/template.ejs',
             filename: './home.html',
+        }),
+        new ExtractTextPlugin({
+            filename: (getPath) => {
+                return getPath('css/[name].css').replace('css/js', 'css');
+            },
+            allChunks: true
         })
     ]
 }

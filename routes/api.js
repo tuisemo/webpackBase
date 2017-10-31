@@ -14,17 +14,9 @@ router.get('/api/books', function(req, res, next) {
     res.json(books);
 });
 
-router.get('/api/search', function(req, res) {
-    // let url = 'https://api.douban.com/v2/book/search';
-    let url = '/api/searchs';
-    // console.log(req);
-    req.pipe(request(url)).pipe(res);
-});
-
-router.get('/api/searchs', function(req, res) {
+router.post('/api/search', function(req, res) {
     let url = 'https://api.douban.com/v2/book/search';
-    console.log(req);
-    req.pipe(request(url)).pipe(res);
+    request.post(url, { form: req.body }).pipe(res);
 });
 
 module.exports = router;

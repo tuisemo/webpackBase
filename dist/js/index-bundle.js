@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -32,9 +32,6 @@
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -63,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 40);
+/******/ 	return __webpack_require__(__webpack_require__.s = 37);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -241,6 +238,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -281,7 +282,8 @@ module.exports = g;
 
 
 /***/ }),
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
@@ -9790,48 +9792,69 @@ module.exports = g;
 
   return Vue$3;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(8).setImmediate))
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(5).setImmediate))
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
+var apply = Function.prototype.apply;
 
-// load the styles
-var content = __webpack_require__(14);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
+// DOM APIs, for completeness
 
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(16)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/_css-loader@0.28.7@css-loader/index.js!../../../node_modules/_less-loader@4.0.5@less-loader/dist/cjs.js!./base.less", function() {
-			var newContent = require("!!../../../node_modules/_css-loader@0.28.7@css-loader/index.js!../../../node_modules/_less-loader@4.0.5@less-loader/dist/cjs.js!./base.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
 }
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(6);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
+
 
 /***/ }),
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -10024,85 +10047,58 @@ if(false) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1)))
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = Function.prototype.apply;
+// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// DOM APIs, for completeness
+// load the styles
+var content = __webpack_require__(9);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
 
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(11)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/_css-loader@0.28.7@css-loader/index.js!../../../node_modules/_less-loader@4.0.5@less-loader/dist/cjs.js!./base.less", function() {
+			var newContent = require("!!../../../node_modules/_css-loader@0.28.7@css-loader/index.js!../../../node_modules/_less-loader@4.0.5@less-loader/dist/cjs.js!./base.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
 }
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(7);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
-
 
 /***/ }),
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(15)(undefined);
+exports = module.exports = __webpack_require__(10)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "/*Less*/\n[v-cloak] {\n  display: none;\n}\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n  font-family: Helvetica, Arial, sans-serif;\n}\n* {\n  box-sizing: border-box;\n}\n.fl {\n  position: relative;\n  float: left;\n}\n.fr {\n  position: relative;\n  float: right;\n}\na {\n  cursor: pointer;\n  transition: all 0.1s ease-out;\n  text-decoration: none;\n}\na:hover {\n  text-decoration: none;\n}\n.conten {\n  position: relative;\n  float: left;\n  padding: 6px 12px;\n}\n.container {\n  margin: 0 auto;\n  width: 1000px;\n}\n.container .bookitem {\n  position: relative;\n  margin: 10px 0;\n  padding: 10px;\n  border: 1px solid #eeeeee;\n  border-radius: 5px;\n}\n.container .bookitem:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.container .bookitem .checkThis {\n  position: relative;\n  float: left;\n  margin-right: 10px;\n  margin-top: 50px;\n}\n.container .con-l {\n  position: relative;\n  float: left;\n  width: 65%;\n}\n.cover {\n  position: relative;\n  float: left;\n  max-width: 150px;\n}\n.cover img {\n  max-width: 100%;\n}\n.basemsg {\n  position: relative;\n  float: left;\n  width: 400px;\n  padding-left: 15px;\n  font-size: 12px;\n}\n.basemsg .info-l {\n  color: #666666;\n}\n.rating {\n  position: relative;\n  float: left;\n  width: 120px;\n  margin-right: 20px;\n  min-height: 150px;\n  font-size: 12px;\n  color: #666666;\n  border-left: .5px solid #eeeeee;\n  border-right: .5px solid #eeeeee;\n  padding-left: 15px;\n  padding-right: 15px;\n}\n.rating p {\n  margin: 0 0 5px 0;\n  line-height: 1.2;\n}\n.rating .rating_right {\n  position: relative;\n  float: right;\n  padding: 10px 0 10px 10px;\n}\n.rating .rating_right .star {\n  display: block;\n  font-size: 16px;\n  color: #f0b034;\n}\n.rating .average {\n  position: relative;\n  float: left;\n  line-height: 1.8;\n  font-size: 28px;\n  color: #333333;\n}\n.item_count {\n  position: relative;\n  float: left;\n  margin-right: 30px;\n  margin-left: 15px;\n}\n.buy_num {\n  position: relative;\n  margin: 0 auto;\n}\n.buy_num:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.buy_num .num_add,\n.buy_num .num_minus {\n  position: relative;\n  float: left;\n  display: block;\n  width: 18px;\n  height: 18px;\n  color: #666;\n  text-align: center;\n  border: 1px solid #eee;\n}\n.buy_num .num_input {\n  position: relative;\n  float: left;\n  width: 30px;\n  height: 18px;\n  font-size: 14px;\n  text-align: center;\n  color: #666;\n  border: 1px solid #eee;\n  border-right: 0;\n  border-left: 0;\n}\n.total {\n  position: relative;\n  float: left;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-size: 14px;\n  font-weight: bold;\n}\n.shopping-r {\n  position: relative;\n  float: right;\n}\n.shoppingBar {\n  position: relative;\n  line-height: 1.4;\n}\n.shoppingBar label {\n  font-size: 12px;\n}\n.shoppingBar #ischeckAll {\n  position: relative;\n  float: left;\n  line-height: 1.4;\n}\n.shoppingBar .shoppingBtn {\n  position: relative;\n  float: left;\n  margin: -10px;\n  margin-left: 0;\n  width: 100px;\n  height: 44px;\n  background-color: #e54346;\n  line-height: 44px;\n  color: #fff;\n  font-size: 20px;\n  text-align: center;\n  cursor: pointer;\n}\ntable td {\n  line-height: 1.2;\n}\n/*搜索组件*/\n.search-form {\n  position: relative;\n  margin: 0 auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n.search-form:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.search-form input {\n  position: relative;\n  float: left;\n  width: 450px;\n  line-height: 1.4;\n  padding: 6px 12px;\n  font-size: 14px;\n  border-radius: 5px;\n  border: .5px solid #ccc;\n  background-color: #fff;\n}\n.search-form input:focus {\n  outline: none;\n}\n.search-form input.input-group {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.search-form .btn-add {\n  position: relative;\n  float: left;\n  cursor: pointer;\n  height: 32px;\n  padding: 6px 12px;\n  border-radius: 5px;\n  border: .5px solid #ccc;\n  border-left: 0;\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n", ""]);
+exports.push([module.i, "/*Less*/\n[v-cloak] {\n  display: none;\n}\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n  font-family: Helvetica, Arial, sans-serif;\n}\n* {\n  box-sizing: border-box;\n}\n.fl {\n  position: relative;\n  float: left;\n}\n.fr {\n  position: relative;\n  float: right;\n}\na {\n  cursor: pointer;\n  transition: all 0.1s ease-out;\n  text-decoration: none;\n}\na:hover {\n  text-decoration: none;\n}\n.conten {\n  position: relative;\n  float: left;\n  padding: 6px 12px;\n}\n.container {\n  margin: 0 auto;\n  width: 1000px;\n}\n.container .bookitem {\n  position: relative;\n  margin: 10px 0;\n  padding: 10px;\n  border: 1px solid #eeeeee;\n  border-radius: 5px;\n}\n.container .bookitem:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.container .bookitem .checkThis {\n  position: relative;\n  float: left;\n  margin-right: 10px;\n  margin-top: 50px;\n}\n.container .con-l {\n  position: relative;\n  float: left;\n  width: 65%;\n}\n.cover {\n  position: relative;\n  float: left;\n  max-width: 150px;\n}\n.cover img {\n  max-width: 100%;\n}\n.basemsg {\n  position: relative;\n  float: left;\n  width: 400px;\n  padding-left: 15px;\n  font-size: 12px;\n}\n.basemsg .info-l {\n  color: #666666;\n}\n.rating {\n  position: relative;\n  float: left;\n  width: 120px;\n  margin-right: 20px;\n  min-height: 150px;\n  font-size: 12px;\n  color: #666666;\n  border-left: .5px solid #eeeeee;\n  border-right: .5px solid #eeeeee;\n  padding-left: 15px;\n  padding-right: 15px;\n}\n.rating p {\n  margin: 0 0 5px 0;\n  line-height: 1.2;\n}\n.rating .rating_right {\n  position: relative;\n  float: right;\n  padding: 10px 0 10px 10px;\n}\n.rating .rating_right .star {\n  display: block;\n  font-size: 16px;\n  color: #f0b034;\n}\n.rating .average {\n  position: relative;\n  float: left;\n  line-height: 1.8;\n  font-size: 28px;\n  color: #333333;\n}\n.item_count {\n  position: relative;\n  float: left;\n  margin-right: 30px;\n  margin-left: 15px;\n}\n.buy_num {\n  position: relative;\n  margin: 0 auto;\n}\n.buy_num:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.buy_num .num_add,\n.buy_num .num_minus {\n  position: relative;\n  float: left;\n  display: block;\n  width: 18px;\n  height: 18px;\n  color: #666;\n  text-align: center;\n  border: 1px solid #eee;\n}\n.buy_num .num_input {\n  position: relative;\n  float: left;\n  width: 30px;\n  height: 18px;\n  font-size: 14px;\n  text-align: center;\n  color: #666;\n  border: 1px solid #eee;\n  border-right: 0;\n  border-left: 0;\n}\n.total {\n  position: relative;\n  float: left;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-size: 14px;\n  font-weight: bold;\n}\n.shopping-r {\n  position: relative;\n  float: right;\n}\n.shoppingBar {\n  position: relative;\n  line-height: 1.4;\n}\n.shoppingBar label {\n  font-size: 12px;\n}\n.shoppingBar #ischeckAll {\n  position: relative;\n  float: left;\n  line-height: 1.4;\n}\n.shoppingBar .shoppingBtn {\n  position: relative;\n  float: left;\n  margin: -10px;\n  margin-left: 0;\n  width: 100px;\n  height: 44px;\n  background-color: #e54346;\n  line-height: 44px;\n  color: #fff;\n  font-size: 20px;\n  text-align: center;\n  cursor: pointer;\n}\ntable td {\n  line-height: 1.2;\n}\n/*搜索组件*/\n.search-form {\n  position: relative;\n  margin: 0 auto;\n  padding-top: 15px;\n  padding-bottom: 15px;\n}\n.search-form:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.search-form input {\n  position: relative;\n  float: left;\n  width: 450px;\n  line-height: 1.4;\n  padding: 6px 12px;\n  font-size: 14px;\n  border-radius: 5px;\n  border: .5px solid #ccc;\n  background-color: #fff;\n}\n.search-form input:focus {\n  outline: none;\n}\n.search-form input.input-group {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.search-form .btn-add {\n  position: relative;\n  float: left;\n  cursor: pointer;\n  height: 32px;\n  padding: 6px 12px;\n  border-radius: 5px;\n  border: .5px solid #ccc;\n  border-left: 0;\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n/*书目展示*/\n.bookList {\n  position: relative;\n}\n.bookList:after {\n  clear: both;\n  content: ' ';\n  height: 0;\n  width: 0;\n  display: block;\n  visivilty: hidden;\n}\n.bookList li {\n  position: relative;\n  float: left;\n  margin: 0 15px 15px 0;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 15 */
+/* 10 */
 /***/ (function(module, exports) {
 
 /*
@@ -10184,7 +10180,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 16 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -10240,7 +10236,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(17);
+var	fixUrls = __webpack_require__(12);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -10556,7 +10552,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 17 */
+/* 12 */
 /***/ (function(module, exports) {
 
 
@@ -10651,6 +10647,11 @@ module.exports = function (css) {
 
 
 /***/ }),
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
 /* 18 */,
 /* 19 */,
 /* 20 */,
@@ -10671,6 +10672,45 @@ module.exports = function (css) {
 /* 35 */,
 /* 36 */,
 /* 37 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_css_normalize_css__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_css_normalize_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__src_css_normalize_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_css_less_base_less__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_css_less_base_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__src_css_less_base_less__);
+/*main.js*/
+const Vue = __webpack_require__(4);
+const data = __webpack_require__(38).provinces;
+
+
+
+var app = new Vue({
+    el: '.wrap',
+    data: {
+        provinces: data,
+        // citys 使用计算属性生成
+        curProvince: data[0].name,
+        curCity: data[0].citys[0]
+    },
+    computed: {
+        citys: function () {
+            let self = this;
+            let value;
+            data.forEach(function (el, index, arr) {
+                if (el.name == self.curProvince) {
+                    value = el.citys;
+                    self.curCity = el.citys[0];
+                }
+            });
+            return value;
+        }
+    }
+});
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -10769,47 +10809,6 @@ module.exports = {
         "citys": ["乌鲁木齐", "克拉玛依", "吐鲁番地区", "哈密地区", "和田地区", "阿克苏地区", "喀什地区", "克孜勒苏柯尔克孜", "巴音郭楞蒙古自治区", "昌吉回族自治州", "博尔塔拉蒙古自治区", "石河子", "阿拉尔", "图木舒克", "五家渠", "伊犁哈萨克自治区", "其他"]
     }]
 };
-
-/***/ }),
-/* 38 */,
-/* 39 */,
-/* 40 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_css_normalize_css__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_css_normalize_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__src_css_normalize_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_css_less_base_less__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_css_less_base_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__src_css_less_base_less__);
-/*main.js*/
-const Vue = __webpack_require__(3);
-const data = __webpack_require__(37).provinces;
-
-
-
-var app = new Vue({
-    el: '.wrap',
-    data: {
-        provinces: data,
-        // citys 使用计算属性生成
-        curProvince: data[0].name,
-        curCity: data[0].citys[0]
-    },
-    computed: {
-        citys: function () {
-            let self = this;
-            let value;
-            data.forEach(function (el, index, arr) {
-                if (el.name == self.curProvince) {
-                    value = el.citys;
-                    self.curCity = el.citys[0];
-                }
-            });
-            return value;
-        }
-    }
-});
 
 /***/ })
 /******/ ]);
