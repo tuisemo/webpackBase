@@ -1,19 +1,24 @@
 /*home.js*/
+/*==========================================*/
+/*|                                        |*/
+/*|  本案例主要实现了Vue子父组件通信功能   |*/
+/*|                                        |*/
+/*==========================================*/
+
 const Vue = require('./src/js/vue.js');
 const axios = require('axios');
 import './src/css/normalize.css';
 import './src/css/less/base.less';
 
-// 全局注册
-// 搜索组件
+
+// 搜索组件（子组件）——全局注册
 Vue.component('search', {
-    // props: ['booksdata'],
     template: `
     <div>
-        <form class="search-form">
+        <div class="search-form">
             <input class="input-group" type="text" name="keyword" v-model:value="keyword" placeholder="作品 / 电子书 / 专栏连载 / 作者 / 出版社" autocomplete="off">
             <div class="btn-add" @click="searchThis">搜索</div>
-        </form>
+        </div>
     </div>
     `,
     data: function() {
@@ -28,10 +33,8 @@ Vue.component('search', {
                     'q': self.keyword
                 })
                 .then(function(res) {
-                    // console.log(res.data.books);
                     self.$emit('update', res.data.books);
-                    // self.$parent.booksdata = res.data.books;
-                    console.log(self.$parent);
+                    // self.$parent.booksdata = res.data.books; //执行这个方法可直接操作父级对象数据
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -39,15 +42,14 @@ Vue.component('search', {
         }
     }
 });
-// 展示组件
+// 展示组件（父组件）——全局注册
 Vue.component('showbook', {
-    // props: ['data'],
     template: `
     <div>
-    <search @update="shoumsg()"></search>
+    <search @update="show_msg"></search>
     <ul class="bookList">
         <li v-for="(book,index) in booksdata">
-            <img v-bind:src="book.images.medium" v-bind:alt="book.imagesalt" /> {{ book.subtitle }}
+            <img v-bind:src="book.images.medium" v-bind:alt="book.imagesalt" /> {{ book.title }}
         </li>
     </ul>
     </div>
@@ -57,13 +59,14 @@ Vue.component('showbook', {
             booksdata: []
         }
     },
-    methdos: {
-        shoumsg: function(data) {
+    methods: {
+        show_msg: function(data) {
             this.booksdata = data;
         }
     }
 });
 
+// Vue实例
 var app = new Vue({
     el: '.wrap',
     data: {
@@ -71,41 +74,8 @@ var app = new Vue({
     },
     created: function() {
         // body...
-    },
-    // 局部注册
-    /*components: {
-        'search':search_component
-    }*/
+    }
 })
 
 
 
-
-
-
-
-
-
-// 局部注册
-/*var search_component = {
-    template: `
-        <form class="search-form">
-            <input class="input-group" type="text" name="q" maxlength="60" size="22" value="" placeholder="作品 / 电子书 / 专栏连载 / 作者 / 出版社" autocomplete="off">
-            <div class="btn-add" @click="searchThis">搜索</div>
-        </form>
-    `,
-    methods: {
-        searchThis: function() {
-            let self = this;
-            axios.post('/api/search', {
-                    'q': self.keyword
-                })
-                .then(function(res) {
-                    console.log(res);
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-        }
-    }
-};*/

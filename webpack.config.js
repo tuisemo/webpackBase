@@ -8,7 +8,8 @@ module.exports = {
     entry: {
         'index': path.resolve(__dirname, './main.js'),
         'books': path.resolve(__dirname, './books.js'),
-        'home': path.resolve(__dirname, './home.js'),
+        'home2': path.resolve(__dirname, './home2.js'),
+        'home3': path.resolve(__dirname, './home3.js'),
     },
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -49,9 +50,15 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             title: 'webpack',
-            chunks: ['home'],
-            template: './src/template.ejs',
-            filename: './home.html',
+            chunks: ['home2'],
+            template: './src/home2.ejs',
+            filename: './home2.html',
+        }),
+        new HtmlWebpackPlugin({
+            title: 'webpack',
+            chunks: ['home3'],
+            template: './src/home3.ejs',
+            filename: './home3.html',
         }),
         new ExtractTextPlugin({
             filename: (getPath) => {
